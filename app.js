@@ -17,14 +17,13 @@ const tiles = [
     [0, 0, 0, 0]
 ];
 let firstRandom = Math.floor(Math.random() * 16)
-//blcs.push({ pos: firstRandom, value: 2 })
+blcs.push({ pos: firstRandom, value: 2 })
 
 //////////////////////////////////////
-blcs.push({ pos: 2, value: 4 })
-blcs.push({ pos: 6, value: 4 })
-blcs.push({ pos: 10, value: 4 })
-blcs.push({ pos: 14, value: 4 })
-
+// blcs.push({ pos: 2, value: 4 })
+// blcs.push({ pos: 6, value: 4 })
+// blcs.push({ pos: 10, value: 4 })
+// blcs.push({ pos: 14, value: 4 })
 //////////////////////////////////////
 
 let secondRandom = firstRandom;
@@ -32,10 +31,10 @@ while (secondRandom === firstRandom) {
     secondRandom = Math.floor(Math.random() * 16)
 }
 if (Math.floor(Math.random() * 6) + 1 === 1) {
-    // blcs.push({ pos: secondRandom, value: 4 })
+    blcs.push({ pos: secondRandom, value: 4 })
 }
 else {
-    // blcs.push({ pos: secondRandom, value: 2 })
+    blcs.push({ pos: secondRandom, value: 2 })
 
 }
 
@@ -45,21 +44,16 @@ function keyMap(key) {
     removeZero();
     const tilesCopy = [[...tiles[0]], [...tiles[1]], [...tiles[2]], [...tiles[3]]];
     if (key === 'ArrowUp') {
-        tiles = up(tilesCopy);
+        up();
     }
     else if (key === 'ArrowDown') {
-        // tiles = 
-        console.log(blcs);
-
         down();
     }
     else if (key === 'ArrowLeft') {
-        tiles = left(tilesCopy);
-
+        left();
     }
     else if (key === 'ArrowRight') {
-        tiles = right(tilesCopy);
-
+        right();
     }
     addTile();
 }
@@ -106,119 +100,100 @@ function down() {
             newRow[3].pos = 8 + col;
 
         }
-
-        // for (let i = newRow.length; i < 4; i++) {
-        //     newRow.push(0);
-        // }
-
-        // if (mergeFlag) {
-        //     down();
-        // }
-        // }
-        // return tilesCopy;
     }
 }
-
-function right(tilesCopy) {
+function right() {
     for (let row = 0; row < 4; row++) {
-        let mergeFlag = false;
+        let mergeCounter = 0;
         const newRow = [];
         for (let i = 3; i >= 0; i--) {
-            if (tilesCopy[row][i] !== 0) {
-                newRow.push(tilesCopy[row][i]);
+            if (blcs.some(element => element.pos === (row * 4 + i) && element.value !== 0)) {
+                newRow.push(...blcs.filter(element => element.pos === (row * 4 + i)));
             }
         }
         for (let i = 0; i < newRow.length - 1; i++) {
-            if (newRow[i] === newRow[i + 1]) {
-                newRow[i] = newRow[i] * 2;
-                newRow[i + 1] = 0;
-                mergeFlag = true;
+            if (newRow[i].value === newRow[i + 1].value && newRow[i].value !== 0) {
+                newRow[i].value = newRow[i].value * 2;
+                newRow[i + 1].value = 0;
+                mergeCounter++;
             }
-
         }
-        for (let i = newRow.length; i < 4; i++) {
-            newRow.push(0);
+        for (let i = 0; i < newRow.length; i++) {
+            if (newRow[i].value !== 0) {
+                newRow[i].pos = row * 4 + 3 - i;
+            }
+            else if (i !== 0) {
+                newRow[i].pos = newRow[i - 1].pos;
+            }
         }
-        for (let i = 3; i >= 0; i--) {
-
-            tilesCopy[row][i] = newRow[3 - i];
-
-        }
-        if (mergeFlag) {
-            tilesCopy = down(tilesCopy);
+        if (mergeCounter === 2) {
+            newRow[2].pos = 2 + 4 * row;
+            newRow[3].pos = 2 + 4 * row;
         }
     }
-    return tilesCopy;
-
 }
-
-
-function up(tilesCopy) {
-    for (let row = 0; row < 4; row++) {
-        let mergeFlag = false;
+function up() {
+    for (let col = 0; col < 4; col++) {
+        let mergeCounter = 0;
         const newRow = [];
         for (let i = 0; i < 4; i++) {
-            if (tilesCopy[i][row] !== 0) {
-                newRow.push(tilesCopy[i][row]);
+            if (blcs.some(element => element.pos === (i * 4 + col) && element.value !== 0)) {
+                newRow.push(...blcs.filter(element => element.pos === (i * 4 + col)));
             }
         }
         for (let i = 0; i < newRow.length - 1; i++) {
-            if (newRow[i] === newRow[i + 1]) {
-                newRow[i] = newRow[i] * 2;
-                newRow[i + 1] = 0;
-                mergeFlag = true;
+            if (newRow[i].value === newRow[i + 1].value && newRow[i].value !== 0) {
+                newRow[i].value = newRow[i].value * 2;
+                newRow[i + 1].value = 0;
+                mergeCounter++;
             }
-
         }
-        for (let i = newRow.length; i < 4; i++) {
-            newRow.push(0);
+        for (let i = 0; i < newRow.length; i++) {
+            if (newRow[i].value !== 0) {
+                newRow[i].pos = (i) * 4 + col;
+            }
+            else if (i !== 0) {
+                newRow[i].pos = newRow[i - 1].pos;
+            }
         }
-        for (let i = 3; i >= 0; i--) {
-
-            tilesCopy[i][row] = newRow[i];
-
-        }
-        if (mergeFlag) {
-            tilesCopy = down(tilesCopy);
+        if (mergeCounter === 2) {
+            newRow[2].pos = 4 + col;
+            newRow[3].pos = 4 + col;
         }
     }
-    return tilesCopy;
-
 }
 
-
-function left(tilesCopy) {
+function left() {
     for (let row = 0; row < 4; row++) {
-        let mergeFlag = false;
+        let mergeCounter = 0;
         const newRow = [];
         for (let i = 0; i < 4; i++) {
-            if (tilesCopy[row][i] !== 0) {
-                newRow.push(tilesCopy[row][i]);
+            if (blcs.some(element => element.pos === (row * 4 + i) && element.value !== 0)) {
+                newRow.push(...blcs.filter(element => element.pos === (row * 4 + i)));
             }
         }
         for (let i = 0; i < newRow.length - 1; i++) {
-            if (newRow[i] === newRow[i + 1]) {
-                newRow[i] = newRow[i] * 2;
-                newRow[i + 1] = 0;
-                mergeFlag = true;
+            if (newRow[i].value === newRow[i + 1].value && newRow[i].value !== 0) {
+                newRow[i].value = newRow[i].value * 2;
+                newRow[i + 1].value = 0;
+                mergeCounter++;
             }
-
         }
-        for (let i = newRow.length; i < 4; i++) {
-            newRow.push(0);
+        for (let i = 0; i < newRow.length; i++) {
+            if (newRow[i].value !== 0) {
+                newRow[i].pos = row * 4 + i;
+            }
+            else if (i !== 0) {
+                newRow[i].pos = newRow[i - 1].pos;
+            }
         }
-        for (let i = 3; i >= 0; i--) {
-
-            tilesCopy[row][i] = newRow[i];
-
-        }
-        if (mergeFlag) {
-            tilesCopy = down(tilesCopy);
+        if (mergeCounter === 2) {
+            newRow[2].pos = 1 + 4 * row;
+            newRow[3].pos = 1 + 4 * row;
         }
     }
-    return tilesCopy;
-
 }
+
 function numToXY(num) {
     console.log(`p-${Math.floor(num / 4) + 1}-${(num % 4) + 1}`);
     return `p-${Math.floor(num / 4) + 1}-${(num % 4) + 1}`;
