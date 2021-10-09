@@ -60,9 +60,12 @@ section {
   font-weight: bold;
   vertical-align: middle;
   line-height: 85px;
-  /*transition: visibility 4s ease-in-out 1s;
-  transition: transform 4s ease-in-out 1s;*/
+  transition: transform 200ms ease-in-out;
 }
+.newTile {
+  opacity: 0.9;
+}
+
 .merge {
   visibility: hidden;
 }
@@ -120,8 +123,6 @@ section {
   background-color: #e8be4e;
   border-color: #e8be4e;
   color: #f2f4ec;
-}
-.new-tile {
 }
 
 .p-1-1 {

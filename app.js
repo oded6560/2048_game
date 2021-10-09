@@ -55,7 +55,7 @@ function keyMap(key) {
     else if (key === 'ArrowRight') {
         right();
     }
-    printTiles();
+
 }
 
 
@@ -113,6 +113,9 @@ function down() {
         console.log(JSON.stringify('change'));
         addTile();
     }
+    else {
+        printTiles();
+    }
 }
 
 
@@ -165,6 +168,8 @@ function right() {
     if (change) {
         console.log(JSON.stringify('change'));
         addTile();
+    } else {
+        printTiles();
     }
 }
 
@@ -218,6 +223,8 @@ function up() {
     if (change) {
         console.log(JSON.stringify('change'));
         addTile();
+    } else {
+        printTiles();
     }
 }
 
@@ -271,6 +278,8 @@ function left() {
     if (change) {
         console.log(JSON.stringify('change'));
         addTile();
+    } else {
+        printTiles();
     }
 }
 
@@ -286,7 +295,8 @@ function printTiles() {
         if (blcs[i].block === undefined) {
             blcs[i].block = blocks[blcs[i].value].cloneNode(true);
             currentBlock.appendChild(blcs[i].block);
-            blcs[i].block.classList.add('new-tile');
+            blcs[i].block.classList.add('innerBlock');
+            blcs[i].block.classList.add('newTile');
         } else {
             blcs[i].block.className = '';
         }
